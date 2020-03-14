@@ -3413,7 +3413,7 @@ html[dir] ._1ClcF{
     width:356px;
     height:355px;
     transition:height .3s ease;
-    background-image: url(../img/HcodeWhatsAppClone.png);
+    background-image: url(../img/icone.png);
 }
 html[dir] ._2Uo0Z{
     margin:0 auto;
@@ -11961,7 +11961,7 @@ html[dir] ._3nfoJ{
     padding:0
 }
 html[dir=ltr] ._3nfoJ{
-    right:40px
+    right:45%;
 }
 html[dir=rtl] ._1e9zI,html[dir=rtl] .document-pdf-preview{
     right:0
@@ -16135,4 +16135,17 @@ html[dir=rtl] ._2ICcy:after{
 }
 #main {
     display:none;
+}
+
+._2oKVP {
+    display: flex;
+    justify-content: center;
+}
+
+#picture-camera {
+
+    height: 100%;
+    width: 43%;
+    text-align: center;
+
 }
