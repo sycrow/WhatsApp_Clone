@@ -1,14 +1,34 @@
 import {Format} from './../util/format';
 import {CameraController} from './CameraController';
 import {DocumentPreviewController} from './DocumentPreviewController';
+import {MicrophoneController} from './MicrophoneController';
+import { Firebase } from './../util/Firebase';
 
 export class WhatsAppController {
 
     constructor() {
 
+        this._firebase = new Firebase();
+        this.initAuth();
         this.elementPrototype();
         this.loadElements();
         this.initEvents();
+
+    }
+
+    initAuth() {
+
+        this._firebase.initAuth().then(response=>{
+            
+            this._user = response.user;
+
+            this.el.appContent.css({
+                display:'flex'
+            });
+
+        }).catch(err=>{
+            console.log('err',err);
+        });
 
     }
 
@@ -189,6 +209,10 @@ export class WhatsAppController {
 
                 if (this.el.inputDocument.files.length) {
 
+                    this.el.panelDocumentPreview.css({
+                        'height':'1%'
+                    });
+
                     let file = this.el.inputDocument.files[0];
 
                     this._documentPreviewController = new DocumentPreviewController(file);
@@ -200,7 +224,15 @@ export class WhatsAppController {
                         this.el.imagePanelDocumentPreview.show();
                         this.el.filePanelDocumentPreview.hide();
 
+                        this.el.panelDocumentPreview.css({
+                            'height':'calc(100% - 120px)'
+                        });
+
                     }).catch(err => {
+
+                        this.el.panelDocumentPreview.css({
+                            'height':'calc(100% - 120px)'
+                        });
 
                         switch (file.type) {
 
@@ -255,18 +287,33 @@ export class WhatsAppController {
 
             this.el.recordMicrophone.show();
             this.el.btnSendMicrophone.hide();
-            this.startRecordMicrophoneTime();
+
+            this._microphoneController = new MicrophoneController(); 
+
+            this._microphoneController.on('ready', audio=>{
+                
+                console.log('ready event');
+
+                this._microphoneController.startRecorder();
+            });
+
+            this._microphoneController.on('recordtimer', timer=> {
+                this.el.recordMicrophoneTimer.innerHTML = Format.toTime(timer); 
+            });
 
         });
 
         this.el.btnCancelMicrophone.on('click', e=>{
 
+            this._microphoneController.stopRecorder();
             this.closeRecordMicrophone();
+            
 
         });
 
         this.el.btnFinishMicrophone.on('click', e=>{
 
+            this._microphoneController.stopRecorder();
             this.closeRecordMicrophone();
 
         });
@@ -358,23 +405,11 @@ export class WhatsAppController {
 
     }
 
-    startRecordMicrophoneTime(){
-
-        let start = Date.now();
-
-        this._recordMicrophoneInterval = setInterval(()=>{
-
-            this.el.recordMicrophoneTimer.innerHTML = Format.toTime((Date.now() - start)); 
-
-        }, 100);
-
-    }
-
     closeRecordMicrophone() {
 
         this.el.recordMicrophone.hide();
         this.el.btnSendMicrophone.show();
-        clearInterval(this._recordMicrophoneInterval);
+       
 
     }
 
