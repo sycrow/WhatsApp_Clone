@@ -1,5 +1,6 @@
 import { Model } from "./Model";
 import { Firebase } from "../util/Firebase";
+import { Format } from "../util/format";
 
 export class Message extends Model {
 
@@ -20,11 +21,33 @@ export class Message extends Model {
     get status(){ return this._data.status }
     set status(value){ return this._data.status = value }
 
+    get id(){ return this._data.id }
+    set id(value){ return this._data.id = value }
+
+    get preview(){ return this._data.preview }
+    set preview(value){ return this._data.preview = value }
+
+    get info(){ return this._data.info }
+    set info(value){ return this._data.info = value }
+
+    get fileType(){ return this._data.fileType }
+    set fileType(value){ return this._data.fileType = value }
+
+    get filename(){ return this._data.filename }
+    set filename(value){ return this._data.filename = value }
+
+    get size(){ return this._data.size }
+    set size(value){ return this._data.size = value }
+
+    get from(){ return this._data.from }
+    set from(value){ return this._data.from = value }
+
 
     getViewElement(me = true) {
 
         let div = document.createElement('div');
 
+        div.id = `_${this.id}`;
         div.className = 'message';
 
         switch (this.type) {
@@ -52,18 +75,11 @@ export class Message extends Model {
                                 </div>
                             </div>
                             <div class="_1lC8v">
-                                <div dir="ltr" class="_3gkvk selectable-text invisible-space copyable-text">Nome do Contato Anexado</div>
+                                <div dir="ltr" class="_3gkvk selectable-text invisible-space copyable-text">${this.content.name}</div>
                             </div>
                             <div class="_3a5-b">
                                 <div class="_1DZAH" role="button">
-                                    <span class="message-time">17:01</span>
-                                    <div class="message-status">
-                                        <span data-icon="msg-dblcheck">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 15" width="16" height="15">
-                                                <path fill="#92A58C" d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"></path>
-                                            </svg>
-                                        </span>
-                                    </div>
+                                    <span class="message-time">${Format.timeStampToTime(this.timeStamp)}</span>
                                 </div>
                             </div>
                         </div>
@@ -74,6 +90,18 @@ export class Message extends Model {
 
                 </div>
                 `;
+
+                if (this.content.photo) {
+
+                    let img = div.querySelector('.photo-contact-sended');
+                    img.src = this.content.photo;
+                    img.show();
+
+                }
+
+                div.querySelector('.btn-message-send').on('click', e=> {
+                    console.log('enviar');
+                });
                 break;
             
             case 'image':
@@ -98,24 +126,13 @@ export class Message extends Model {
                                         </div>
                                     </div>
                                 </div>
-                                <img src="#" class="_1JVSX message-photo" style="width: 100%; display:none">
+                                <img src="${this.content}" class="_1JVSX message-photo" style="width: 100%; display:none">
                                 <div class="_1i3Za"></div>
-                            </div>
-                            <div class="message-container-legend">
-                                <div class="_3zb-j ZhF0n">
-                                    <span dir="ltr" class="selectable-text invisible-space copyable-text message-text">Texto da foto</span>
-                                </div>
                             </div>
                             <div class="_2TvOE">
                                 <div class="_1DZAH text-white" role="button">
-                                    <span class="message-time">17:22</span>
-                                    <div class="message-status">
-                                        <span data-icon="msg-check-light">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 15" width="16" height="15">
-                                                <path fill="#FFF" d="M10.91 3.316l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"></path>
-                                            </svg>
-                                        </span>
-                                    </div>
+                                    <span class="message-time">${Format.timeStampToTime(this.timeStamp)}</span>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -130,6 +147,17 @@ export class Message extends Model {
                     </div>
                 </div>
                 `;
+
+                div.querySelector('.message-photo').on('load', e=>{
+
+                    div.querySelector('.message-photo').show();
+                    div.querySelector('._34Olu').hide();
+                    div.querySelector('._3v3PK').css({
+                        height: 'auto'
+                    });
+
+                });
+
                 break;
 
             case 'document':
@@ -137,13 +165,13 @@ export class Message extends Model {
                 <div class="_3_7SH _1ZPgd">
                     <div class="_1fnMt _2CORf">
                         <a class="_1vKRe" href="#">
-                            <div class="_2jTyA" style="background-image: url()"></div>
+                            <div class="_2jTyA" style="background-image: url(${this.preview})"></div>
                             <div class="_12xX7">
                                 <div class="_3eW69">
                                     <div class="JdzFp message-file-icon icon-doc-pdf"></div>
                                 </div>
                                 <div class="nxILt">
-                                    <span dir="auto" class="message-filename">Arquivo.pdf</span>
+                                    <span dir="auto" class="message-filename">${this.filename}</span>
                                 </div>
                                 <div class="_17viz">
                                     <span data-icon="audio-download" class="message-file-download">
@@ -161,25 +189,24 @@ export class Message extends Model {
                             </div>
                         </a>
                         <div class="_3cMIj">
-                            <span class="PyPig message-file-info">32 páginas</span>
-                            <span class="PyPig message-file-type">PDF</span>
-                            <span class="PyPig message-file-size">4 MB</span>
+                            <span class="PyPig message-file-info">${this.info}</span>
+                            <span class="PyPig message-file-type">${this.fileType}</span>
+                            <span class="PyPig message-file-size">${this.size}</span>
                         </div>
                         <div class="_3Lj_s">
                             <div class="_1DZAH" role="button">
-                                <span class="message-time">18:56</span>
-                                <div class="message-status">
-                                    <span data-icon="msg-time">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 15" width="16" height="15">
-                                            <path fill="#859479" d="M9.75 7.713H8.244V5.359a.5.5 0 0 0-.5-.5H7.65a.5.5 0 0 0-.5.5v2.947a.5.5 0 0 0 .5.5h.094l.003-.001.003.002h2a.5.5 0 0 0 .5-.5v-.094a.5.5 0 0 0-.5-.5zm0-5.263h-3.5c-1.82 0-3.3 1.48-3.3 3.3v3.5c0 1.82 1.48 3.3 3.3 3.3h3.5c1.82 0 3.3-1.48 3.3-3.3v-3.5c0-1.82-1.48-3.3-3.3-3.3zm2 6.8a2 2 0 0 1-2 2h-3.5a2 2 0 0 1-2-2v-3.5a2 2 0 0 1 2-2h3.5a2 2 0 0 1 2 2v3.5z"></path>
-                                        </svg>
-                                    </span>
-                                </div>
+                                <span class="message-time">${Format.timeStampToTime(this.timeStamp)}</span>
+                                
                             </div>
                         </div>
                     </div>
                 </div>
                 `;
+
+                div.on('click', e =>{
+                    window.open(this.content);
+                })
+
                 break;
 
             case 'audio':
@@ -246,14 +273,8 @@ export class Message extends Model {
                         </div>
                         <div class="_27K_5">
                             <div class="_1DZAH" role="button">
-                                <span class="message-time">17:48</span>
-                                <div class="message-status">
-                                    <span data-icon="msg-dblcheck-ack">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 15" width="16" height="15">
-                                            <path fill="#4FC3F7" d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"></path>
-                                        </svg>
-                                    </span>
-                                </div>
+                                <span class="message-time">${Format.timeStampToTime(this.timeStamp)}</span>
+                                
                             </div>
                         </div>
                     </div>
@@ -276,11 +297,11 @@ export class Message extends Model {
                     <span class="tail-container highlight"></span>
                     <div class="Tkt2p">
                         <div class="_3zb-j ZhF0n">
-                            <span dir="ltr" class="selectable-text invisible-space message-text">Oi!</span>
+                            <span dir="ltr" class="selectable-text invisible-space message-text">${this.content}</span>
                         </div>
                         <div class="_2f-RV">
                             <div class="_1DZAH">
-                                <span class="msg-time">11:33</span>
+                                <span class="message-time">${Format.timeStampToTime(this.timeStamp)}</span>
                             </div>
                         </div>
                     </div>
@@ -289,7 +310,15 @@ export class Message extends Model {
 
         }
 
-        let className = (me) ? 'message-out' : 'message-in';
+        let className = 'message-in';
+
+        if (me) {
+
+            className = 'message-out';
+
+            div.querySelector('.message-time').parentElement.appendChild(this.getStatusViewElement());
+
+        }
 
         div.firstElementChild.classList.add(className);
 
@@ -299,13 +328,137 @@ export class Message extends Model {
 
     static send(chatId, from, type, content) {
 
-        return Message.getRef(chatId).add({
-            content,
-            timeStamp: new Date(),
-            status: 'wait',
-            type,
-            from 
+        return  new Promise((s, f)=> {
+
+            Message.getRef(chatId).add({
+                content,
+                timeStamp: new Date(),
+                status: 'wait',
+                type,
+                from 
+            }).then(result=>{
+
+                let docRef = result.parent.doc(result.id);
+
+                docRef.set({
+                    status: 'sent'
+                }, {
+                    merge:true
+                }).then(()=>{
+
+                    s(docRef);
+
+                });
+
+            });
+    
+
         });
+
+    }
+
+    static sendImage(chatId, from, file) {
+
+        return new Promise((s, f) => {
+
+            Message.upload(file, from).then(snapshot => {
+                Message.send(
+                    chatId, 
+                    from, 
+                    'image', 
+                    snapshot.downloadURL
+                ).then(()=>{
+
+                    s();
+
+                });
+
+            });
+
+        });
+
+
+    }
+
+    static upload(file, from) {
+
+        return new Promise((s, f) => {
+
+            let uploadTask = Firebase.hd().ref(from).child(Date.now() + '_' + file.name).put(file);
+
+            uploadTask.on('state_changed', e=>{
+    
+                console.info('up',e);
+    
+            }, err => {
+    
+                f(err);
+    
+            }, ()=>{
+    
+                uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
+                    s(downloadURL);
+                });
+                });
+    
+            });
+
+    }
+
+    static sendDocument(chatId, from, file, filePreview, info) {
+
+        Message.send(
+            chatId,
+            from,
+            'document',
+            ''
+        ).then(msgRef => {
+
+            Message.upload(file, from).then(downloadURL => {
+
+                let downloadFile = downloadURL;
+
+                if ( filePreview ) {
+
+                Message.upload(filePreview, from).then(downloadURL2 => {
+
+                    let downloadPreview = downloadURL2;
+
+                    msgRef.set({
+                        content: downloadFile,
+                        preview: downloadPreview,
+                        filename: file.name,
+                        size: file.size,
+                        fileType: file.type,
+                        status: 'sent',
+                        info
+                    }, {
+                        merge: true
+                    });
+    
+                });
+
+                } else {
+                    msgRef.set({
+                        content: downloadFile,
+                        filename: file.name,
+                        size: file.size,
+                        fileType: file.type,
+                        status: 'sent'
+                    }, {
+                        merge: true
+                    });
+                }
+
+            });
+    
+        });
+
+    }
+
+    static sendContact(chatId, from, contact) {
+
+        return Message.send(chatId, from, 'contact', contact);
 
     }
 
@@ -315,6 +468,58 @@ export class Message extends Model {
         .collection('chats')
         .doc(chatId)
         .collection('messages');
+
+    }
+
+    getStatusViewElement() {
+
+        let div = document.createElement('div');
+
+        div.className = 'message-status';
+
+        switch (this.status) {
+            case 'wait':
+                div.innerHTML = `
+                    <span data-icon="msg-time">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 15" width="16" height="15">
+                            <path fill="#859479" d="M9.75 7.713H8.244V5.359a.5.5 0 0 0-.5-.5H7.65a.5.5 0 0 0-.5.5v2.947a.5.5 0 0 0 .5.5h.094l.003-.001.003.002h2a.5.5 0 0 0 .5-.5v-.094a.5.5 0 0 0-.5-.5zm0-5.263h-3.5c-1.82 0-3.3 1.48-3.3 3.3v3.5c0 1.82 1.48 3.3 3.3 3.3h3.5c1.82 0 3.3-1.48 3.3-3.3v-3.5c0-1.82-1.48-3.3-3.3-3.3zm2 6.8a2 2 0 0 1-2 2h-3.5a2 2 0 0 1-2-2v-3.5a2 2 0 0 1 2-2h3.5a2 2 0 0 1 2 2v3.5z"></path>
+                        </svg>
+                    </span>
+                `;
+            break;
+
+            case 'received':
+                div.innerHTML = `
+                <span data-icon="msg-dblcheck">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 15" width="16" height="15">
+                        <path fill="#859479" d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"></path>
+                    </svg>
+                </span>
+                `;
+            break;
+
+            case 'sent':
+                div.innerHTML = `
+                <span data-icon="msg-check">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 15" width="16" height="15">
+                        <path fill="#859479" d="M10.91 3.316l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"></path>
+                    </svg>
+                </span>
+                `;
+            break;
+
+            case 'read':
+                div.innerHTML = `
+                <span data-icon="msg-dblcheck-ack">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 15" width="16" height="15">
+                        <path fill="#4FC3F7" d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"></path>
+                    </svg>
+                </span>
+                `;
+            break;
+        
+        }
+        return div;
 
     }
 

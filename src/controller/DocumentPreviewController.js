@@ -52,7 +52,7 @@ export class DocumentPreviewController {
                                 let viewport = page.getViewport(1);
 
                                 let canvas = document.createElement('canvas');
-                                let context = canvas.getContext('2d');
+                                let canvasContext = canvas.getContext('2d');
 
                                 canvas.width = viewport.width;
                                 canvas.height = viewport.height;  
@@ -62,11 +62,11 @@ export class DocumentPreviewController {
                                     viewport
                                 }).then(()=>{
 
-                                    let s = (pdf.numPages > 1) ? 's' : '';
+                                    let ss = (pdf.numPages > 1) ? 's' : '';
 
                                     s({
                                         src: canvas.toDataURL('image.png'),
-                                        info: `${pdf.numPages} página${_s}`
+                                        info: `${pdf.numPages} página${ss}`
                                     });
 
                                 }).catch(err=>{
