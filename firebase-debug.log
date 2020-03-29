@@ -1,0 +1,14 @@
+[debug] [2020-03-29T03:14:23.670Z] ----------------------------------------------------------------------
+[debug] [2020-03-29T03:14:23.672Z] Command:       /home/thiago/.nvm/versions/node/v12.16.1/bin/node /usr/local/bin/firebase deploy --only functions
+[debug] [2020-03-29T03:14:23.673Z] CLI Version:   7.16.1
+[debug] [2020-03-29T03:14:23.673Z] Platform:      linux
+[debug] [2020-03-29T03:14:23.673Z] Node Version:  v12.16.1
+[debug] [2020-03-29T03:14:23.673Z] Time:          Sun Mar 29 2020 00:14:23 GMT-0300 (GMT-03:00)
+[debug] [2020-03-29T03:14:23.673Z] ----------------------------------------------------------------------
+[debug] [2020-03-29T03:14:23.673Z] 
+[debug] [2020-03-29T03:14:23.678Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-03-29T03:14:23.679Z] > authorizing via signed-in user
+[debug] [2020-03-29T03:14:23.679Z] [iam] checking project whatsappclone-eac32 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2020-03-29T03:14:23.681Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/whatsappclone-eac32:testIamPermissions  
+
+[debug] [2020-03-29T03:14:25.242Z] <<< HTTP RESPONSE 200
